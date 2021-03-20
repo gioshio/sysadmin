@@ -1,0 +1,37 @@
+
+
+
+
+
+
+1.## Setting Up the NFS Server
+sudo yum install -y openssh-clients openssh
+yum install -y nfs-utils nfs-utils-lib
+vi /etc/exports
+
+/code 172.16.238.10(rw,sync,no_root_squash)
+/code 172.16.238.11(rw,sync,no_root_squash)
+/code 172.16.238.12(rw,sync,no_root_squash)
+
+systemctl enable nfs-server && sudo systemctl start nfs-server && sudo systemctl status nfs-server
+
+exportfs -av
+showmount -e ststor01
+
+
+2.## Setting Up the NFS Client in all apps server
+
+yum install nfs-utils nfs-utils-lib
+
+mkdir -p /var/www/appdata && mount -t nfs 172.16.238.15:/code /var/www/appdata
+systemctl enable nfs-server && sudo systemctl start nfs-server && sudo systemctl status nfs-server
+
+to add permanent
+vi /etc/fstab
+echo 172.16.238.15:/code /var/www/appdata nfs defaults 0 0 > /etc/fstab
+
+copy from jump server
+scp /tmp/index.html natasha@ststor01:/tmp
+
+to use scp we have to install open-ssh in storage server also, then scp from jump server it will work.
+sudo yum install -y openssh-clients openssh

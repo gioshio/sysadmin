@@ -1,0 +1,54 @@
+Solution:
+
+Login to every appserver by ssh
+
+ssh tony@stapp01  Ir0nM@n
+ssh steve@stapp02  Am3ric@
+ssh banner@stapp03 BigGr33n
+
+Then login as root
+
+sudo su
+
+Install httpd and openssh in all appservers
+
+yum install httpd -y
+yum install openssh-clients -y
+systemctl restart sshd
+
+Copy mentioned folders in the question  to every appserver from jump host
+
+scp -r /home/thor/ecommerce tony@stapp01:/tmp
+scp -r /home/thor/games tony@stapp01:/tmp
+
+scp -r /home/thor/official steve@stapp02:/tmp
+scp -r /home/thor/apps steve@stapp02:/tmp
+
+scp -r /home/thor/official banner@stapp03:/tmp
+scp -r /home/thor/apps banner@stapp03:/tmp
+
+Then from any appserver move the folders to server html folder
+
+mv /tmp/ecommerce /var/www/html
+mv /tmp/games /var/www/html
+
+Next change Listen port to 8080 and restart httpd in all appservers
+
+vi /etc/httpd/conf/httpd.conf
+
+systemctl start httpd
+systemctl enable httpd
+
+Check from jump host
+
+curl http://stapp01:8080/official/
+
+curl http://stapp01:8080/apps/
+
+curl http://stapp02:8080/official/
+
+curl http://stapp02:8080/apps/
+
+curl http://stapp03:8080/official/
+
+curl http://stapp03:8080/apps/

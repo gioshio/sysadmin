@@ -1,0 +1,31 @@
+To secure our Nautilus infrastructure in Stratos Datacenter we have decided to install and configure firewalld on all app servers.
+ We have Apache and Nginx services running on these apps. Nginx is running as a reverse proxy server for Apache. We might have more 
+ robust firewall settings in the future, but for now we have decided to go with the given requirements listed below:
+Allow all incoming connections on Nginx port.
+Allow incoming connections from LB host only on Apache port and block for all others.
+All rules must be permanent.
+Zone should be public.
+If Apache or Nginx services aren't running already, please make sure to start them.
+
+
+ssh tony@stapp01 	Ir0nM@n
+ssh steve@stapp02  Am3ric@
+ssh banner@stapp03  BigGr33n
+
+### check appache port
+cat /etc/httpd/conf/httpd.conf | grep Listen
+### check nginx port
+cat /etc/nginx/nginx.conf | grep listen
+sudo yum install firewalld -y
+sudo systemctl start firewalld
+sudo systemctl enable firewalld
+sudo systemctl status firewalld
+sudo firewall-cmd --state
+sudo firewall-cmd --reload
+sudo firewall-cmd --zone=public --add-port=8099/tcp --permanent
+sudo firewall-cmd --permanent --zone=public --add-service=https
+sudo firewall-cmd --permanent --zone=public --add-service=http
+sudo firewall-cmd --permanent --zone=public --add-rich-rule='rule family="ipv4" source address="172.16.238.14" port port=8087 protocol=tcp accept'
+sudo systemctl start nginx && sudo systemctl enable nginx && sudo systemctl status nginx
+sudo systemctl start httpd && sudo systemctl enable httpd && sudo systemctl status httpd
+sudo firewall-cmd --reload && sudo systemctl restart firewalld && sudo firewall-cmd --zone=public --list-all

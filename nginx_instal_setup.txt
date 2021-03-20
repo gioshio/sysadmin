@@ -1,0 +1,27 @@
+install nginx on centos
+
+sudo yum install epel-release
+2.sudo yum install nginx
+3.sudo systemctl start nginx
+4.systemctl status nginx
+If you have firewall running follow this if not skip.
+sudo firewall-cmd --add-service=http
+sudo firewall-cmd --add-service=https
+sudo firewall-cmd --runtime-to-permanent
+sudo iptables -I INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+sudo iptables -I INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+sudo mkdir /etc/ssl/certs and sudo mkdir /etc/ssl/private
+sudo chmod 700 /etc/ssl/certs
+sudo chmod 700 /etc/ssl/private
+edit the /etc/nginx/nginx.conf file replace above directory in ssl_certificates and copy the file that is given to you in the task question
+cp /tmp/nautilus.crt /etc/ssl/certs
+cp /tmp/nautilus.key /etc/ssl/private
+and edit the nginx.conf file by replacing the default directories there with your above created directories
+/etc/ssl/certs/nautilus.crt
+/etc/ssl/private/nautilus.key
+
+create a index.html file in /usr/share/nginx/html
+
+after this curl ip/host address.
+
+curl -Ik https://172.16.238.10
